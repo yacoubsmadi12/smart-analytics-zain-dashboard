@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 :root {
   font-family: Manrope, sans-serif;
@@ -3757,3 +3757,149 @@ nav em {
 .executive-swot,.executive-insight-grid { width:min(1700px,calc(100% - 64px)); margin:0 auto 12px; padding:15px; border:1px solid #204a55; border-radius:10px; background:linear-gradient(145deg,#0e2832,#091a24); }.swot-source { color:#71949c; font:8px 'DM Mono'; }.swot-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:13px; }.swot-grid article { min-height:72px; padding:10px 11px; border:1px solid #24515b; border-radius:7px; background:#0a1e28; }.swot-grid article b { display:block; margin-bottom:7px; font-size:10px; }.swot-grid article span { color:#90adb2; font-size:9px; line-height:1.45; }.swot-strength { border-top:2px solid #5cdaa6 !important; }.swot-strength b { color:#75e0ad; }.swot-weakness { border-top:2px solid #f0b45f !important; }.swot-weakness b { color:#f3c16d; }.swot-opportunity { border-top:2px solid #5cc9e0 !important; }.swot-opportunity b { color:#70d9e8; }.swot-threat { border-top:2px solid #ef737e !important; }.swot-threat b { color:#f28a91; }.executive-insight-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:0; border:0; background:transparent; }.executive-insight-grid article { display:flex; flex-direction:column; min-height:145px; padding:14px; border:1px solid #214b56; border-radius:9px; background:#0d2530; }.executive-insight-grid article:nth-child(1) { border-top:2px solid #f1c36d; }.executive-insight-grid article:nth-child(2) { border-top:2px solid #ef7882; }.executive-insight-grid article:nth-child(3) { border-top:2px solid #62d8ba; }.executive-insight-grid article:nth-child(4) { border-top:2px solid #74b7ed; }.executive-insight-grid h3 { margin:8px 0 5px; color:#e2f2ef; font-size:12px; }.executive-insight-grid p { flex:1; margin:0 0 12px; color:#8eaeb3; font-size:9px; line-height:1.5; }.executive-insight-grid button { display:inline-flex; align-items:center; gap:5px; width:max-content; border:1px solid #2d727a; border-radius:5px; padding:7px 8px; background:#123a43; color:#76ded0; font-size:8px; }.executive-insight-grid button:hover { border-color:#65d7ca; background:#164751; }
 @media (max-width:900px) { .swot-grid,.executive-insight-grid { grid-template-columns:repeat(2,1fr); } }
 @media (max-width:700px) { .executive-swot,.executive-insight-grid { width:calc(100% - 24px); }.swot-grid,.executive-insight-grid { grid-template-columns:1fr; }.swot-source { display:none; } }
+
+
+/* Zain telecom palette: retain the existing layout while lifting contrast. */
+:root {
+  --bg: #353535;
+  --panel: #050505;
+  --panel2: #111111;
+  --line: #414141;
+  --muted: #c3bdc8;
+  --cyan: #bd50e9;
+  --blue: #6250e8;
+  --green: #ce70e9;
+  --amber: #d89afa;
+  --red: #ff80cb;
+  --purple: #a43fe0;
+  font-family: Inter, Manrope, Arial, sans-serif;
+}
+body { background: #353535; color: #f5f2f7; }
+.app-shell { background: #353535 !important; }
+.app-shell::before, .platform-grid, .platform-tower { display: none !important; }
+.main-content { background: #353535; }
+.sidebar-organized { background: #050505 !important; border-right: 1px solid #4a4a4a !important; }
+.sidebar-context { background: #101010 !important; border-color: #3d3d3d !important; }
+.nav-group { border-color: #ffffff12 !important; }
+.nav-group-title { color: #aaa4af !important; }
+.organized-nav-item { color: #e2dde6 !important; }
+.organized-nav-item:hover { border-color: #a942d7 !important; background: linear-gradient(100deg,#8b29c5,#5134b8) !important; color: #fff !important; }
+.topbar { background: #353535 !important; border-bottom-color: #515151 !important; }
+.executive-command-bar, .executive-kpis article, .executive-priority-panel,
+.system-pulse-compact, .network-impact-panel, .changes-panel, .executive-swot,
+.executive-insight-grid article, .ai-insight-compact, .explore-intelligence-cta,
+.panel, .kpi-card {
+  border-color: #414141 !important;
+  border-radius: 7px !important;
+  background: #050505 !important;
+  color: #f4f0f7 !important;
+  box-shadow: 0 8px 24px #0003;
+}
+.executive-kpis article > span, .executive-priority-panel p,
+.executive-insight-grid p, .command-footer { color: #c3bdc8 !important; }
+.executive-kpis article > b, .executive-priority-panel h2,
+.executive-insight-grid h3 { color: #fff !important; }
+.executive-kpis article, .command-bar-label, .command-metric > svg { color: #c362ec !important; }
+.recharts-cartesian-grid line, .recharts-cartesian-axis line { stroke: #3a3a3a !important; }
+.recharts-cartesian-axis-tick text { fill: #c3bdc8 !important; }
+
+/* Login page: one seamless, silent background video under the whole layout. */
+.login-shell.login-refined.login-video-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(420px, .92fr);
+  min-height: 100svh;
+  background: #100e13 !important;
+  color: #f7f3f8 !important;
+  font-family: Inter, Arial, sans-serif;
+}
+.login-refined.login-video-page .login-background-video {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  filter: saturate(.92) brightness(.78);
+}
+.login-refined.login-video-page .login-video-tint {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg,#100e1340 0%,#100e1360 42%,#100e13c2 100%),
+              linear-gradient(0deg,#100e1370 0%,#100e1320 55%,#100e1360 100%);
+}
+.login-refined.login-video-page .login-art.login-video-brand-pane,
+.login-refined.login-video-page .login-card-wrap {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  background: transparent !important;
+}
+.login-refined.login-video-page .login-art.login-video-brand-pane {
+  display: flex;
+  min-height: 100vh;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 48px clamp(40px, 6vw, 90px);
+  border: 0 !important;
+}
+.login-refined.login-video-page .login-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.login-refined.login-video-page .login-brand::before { display: none !important; content: none !important; }
+.login-zain-logo { display: block; width: 76px; height: auto; flex: 0 0 auto; }
+.login-brand-divider { width: 1px; height: 32px; background: #cfc4d455; }
+.login-brand-copy strong { color: #fff; font: 700 19px Inter, Arial, sans-serif; letter-spacing: -.5px; }
+.login-refined.login-video-page .login-card-wrap {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 40px clamp(30px, 5vw, 70px);
+}
+.login-refined.login-video-page .login-card {
+  width: min(438px, 100%);
+  padding: 40px 38px 34px;
+  border: 1px solid #5a4c62 !important;
+  border-radius: 12px !important;
+  background: linear-gradient(150deg,#141117ed,#0b0a0dee) !important;
+  box-shadow: 0 28px 76px #0008, 0 0 45px #8d35b311 !important;
+  backdrop-filter: blur(16px);
+}
+.login-refined.login-video-page .login-card-head .section-kicker { color: #e3a2f4 !important; }
+.login-refined.login-video-page .login-card-head h2 { color: #fff !important; }
+.login-refined.login-video-page .login-card-head p { color: #d3ced6 !important; font-size: 13px; }
+.login-refined.login-video-page .login-card form { display: grid; gap: 20px; }
+.login-refined.login-video-page .login-card form > label > span { color: #eee9f1; font-size: 12px; }
+.login-refined.login-video-page .login-input { min-height: 52px; border-color: #5a535f !important; background: #17151a !important; color: #d77bef !important; }
+.login-refined.login-video-page .login-input input { color: #fff !important; font-family: Inter, Arial, sans-serif; }
+.login-refined.login-video-page .login-submit { height: 51px; border-radius: 7px; background: linear-gradient(105deg,#a42bd4,#583ac0) !important; color: #fff !important; }
+.login-refined.login-video-page .login-security { color: #d0cad4 !important; }
+.login-refined.login-video-page .login-card::before { display: none !important; }
+@media (max-width: 1020px) {
+  .login-shell.login-refined.login-video-page { grid-template-columns: minmax(0,1fr); }
+  .login-refined.login-video-page .login-art.login-video-brand-pane { min-height: 92px; padding: 28px clamp(24px,7vw,72px) 0; }
+  .login-refined.login-video-page .login-card-wrap { min-height: auto; padding: 32px 24px 52px; }
+  .login-refined.login-video-page .login-video-tint { background: linear-gradient(180deg,#100e1340 0%,#100e1384 28%,#100e13e0 100%); }
+  .login-refined.login-video-page .login-background-video { object-position: center 36%; }
+}
+@media (max-width: 600px) {
+  .login-refined.login-video-page .login-art.login-video-brand-pane { min-height: 78px; padding: 24px 22px 0; }
+  .login-refined.login-video-page .login-card-wrap { padding: 26px 16px 36px; }
+  .login-zain-logo { width: 62px; }
+  .login-brand-copy strong { font-size: 16px; }
+  .login-refined.login-video-page .login-card { padding: 30px 24px 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .login-refined.login-video-page .login-background-video { display: none; }
+  .login-shell.login-refined.login-video-page { background: #17131b url("/brand/smartanalytics-intro-poster.jpg") center / cover no-repeat !important; }
+}
