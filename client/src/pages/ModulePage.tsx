@@ -456,7 +456,7 @@ export default function ModulePage({ slug }: { slug: string }) {
   const [, navigate] = useLocation();
   const { data: permissions, isLoading } = trpc.auth.permissions.useQuery();
   const { data: liveSources } = trpc.data.sources.useQuery(undefined, {
-    enabled: slug === "data-management",
+    enabled: slug === "data-management" && Boolean(permissions?.grants?.includes("data.view")),
   });
   const { data: managedUsers } = trpc.admin.users.useQuery(undefined, {
     enabled: slug === "user-management" && Boolean(permissions?.grants?.includes("users.manage")),
@@ -549,28 +549,3 @@ export default function ModulePage({ slug }: { slug: string }) {
     </main>
   );
 }
-
-export const ExecutiveOverviewPage = () => (
-  <ModulePage slug="executive-overview" />
-);
-export const IntelligenceMapPage = () => <ModulePage slug="intelligence-map" />;
-export const NetworkPage = () => <ModulePage slug="network" />;
-export const CustomerExperiencePage = () => (
-  <ModulePage slug="customer-experience" />
-);
-export const CustomersPage = () => <ModulePage slug="customers" />;
-export const ComplaintsPage = () => <ModulePage slug="complaints" />;
-export const InfrastructureFiberPage = () => (
-  <ModulePage slug="infrastructure-fiber" />
-);
-export const SalesPage = () => <ModulePage slug="sales" />;
-export const MarketingPage = () => <ModulePage slug="marketing" />;
-export const BusinessRevenuePage = () => <ModulePage slug="business-revenue" />;
-export const PrioritiesPage = () => <ModulePage slug="priorities" />;
-export const AIAssistantPage = () => <ModulePage slug="ai-assistant" />;
-export const AlertsPage = () => <ModulePage slug="alerts" />;
-export const ReportsPage = () => <ModulePage slug="reports" />;
-export const DataManagementPage = () => <ModulePage slug="data-management" />;
-export const UserManagementPage = () => <ModulePage slug="user-management" />;
-export const SystemSettingsPage = () => <ModulePage slug="system-settings" />;
-export const AuditLogsPage = () => <ModulePage slug="audit-logs" />;

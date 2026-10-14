@@ -35,6 +35,7 @@ import {
   updateCurrentUserProfile,
   listImportRuns,
   verifyLocalPassword,
+  recordAudit,
 } from "./db";
 import { storagePut } from "./storage";
 import { saveImportMapping, updateDataSourceSync } from "./db";
@@ -213,7 +214,7 @@ export const appRouter = router({
     }),
   }),
   reports: router({
-    generate: protectedProcedure.input(z.object({ kind: z.enum(["executive", "network", "customer-experience", "business", "priority"]) })).query(async ({ input }) => { const sites = await getPersistedMapSites(); return sites ? createReport(input.kind as ReportKind, sites) : null; }),
+    generate: protectedProcedure.input(z.object({ kind: z.enum(["executive", "network", "customer-experience", "business", "priority"]) })).query(async ({ ctx, input }) => { const sites = await getPersistedMapSites(); const report = sites ? createReport(input.kind as ReportKind, sites) : null; await recordAudit({ userId: ctx.user.id, action: "report.exported", resource: input.kind, metadata: { rows: report?.rows.length ?? 0, source: report ? "operational" : "unavailable" } }); return report; }),
   }),
   settings: router({
     get: protectedProcedure.query(({ ctx }) => { adminOnly(ctx.user); return systemSettings; }),

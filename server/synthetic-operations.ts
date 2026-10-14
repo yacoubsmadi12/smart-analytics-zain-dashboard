@@ -526,12 +526,19 @@ export function buildSyntheticPriorities(): PrioritiesOperations {
     const profile = profiles[index];
     const affectedCustomers = 3_800 + index * 620;
     const revenueRisk = 240_000 + index * 62_000;
+    const issueProfiles = [
+      { issue: "4G congestion", category: "network" as const, action: "Capacity Upgrade", rationale: `${profile.congestion}% congestion is reducing available headroom across the synthetic service area.` },
+      { issue: "Coverage degradation", category: "network" as const, action: "Coverage Optimization", rationale: `Coverage quality is below target in ${region}; affected customers need a radio optimization review.` },
+      { issue: "Fiber backhaul pressure", category: "fiber" as const, action: "Fiber Migration", rationale: `${profile.fiber}% fiber readiness leaves the synthetic area exposed to backhaul pressure.` },
+      { issue: "Complaint concentration", category: "customer" as const, action: "CX Investigation", rationale: `${920 + index * 115} complaints are concentrated around the most impacted service areas.` },
+      { issue: "Churn risk", category: "customer" as const, action: "Retention Shield", rationale: `High-value customers in ${region} show a rising churn signal linked to service quality.` },
+    ][index % 5];
     return [
       {
         id: `SYN-P-${index + 1}-network`,
         region,
-        issue: "4G congestion",
-        category: "network" as const,
+        issue: issueProfiles.issue,
+        category: issueProfiles.category,
         score: profile.congestion,
         severity:
           profile.congestion >= 80 ? ("critical" as const) : ("high" as const),
@@ -540,8 +547,8 @@ export function buildSyntheticPriorities(): PrioritiesOperations {
         salesPipeline: 420_000 + index * 55_000,
         complaintCount: 920 + index * 115,
         networkHealth: Math.max(0, 100 - profile.congestion),
-        action: "Capacity Upgrade",
-        rationale: `${profile.congestion}% congestion is reducing available headroom across the synthetic service area.`,
+        action: issueProfiles.action,
+        rationale: issueProfiles.rationale,
       },
       {
         id: `SYN-P-${index + 1}-fiber`,

@@ -3903,3 +3903,85 @@ body { background: #353535; color: #f5f2f7; }
   .login-refined.login-video-page .login-background-video { display: none; }
   .login-shell.login-refined.login-video-page { background: #17131b url("/brand/smartanalytics-intro-poster.jpg") center / cover no-repeat !important; }
 }
+
+
+/* ================================================================
+   Unified SmartAnalytics Aurora theme
+   Shared visual language with the secure login experience.
+   ================================================================ */
+:root {
+  --bg: #0b0a12;
+  --panel: #15111d;
+  --panel2: #21182d;
+  --line: #3a2a49;
+  --muted: #a99ab4;
+  --cyan: #d77bef;
+  --blue: #7564e8;
+  --green: #63e6d3;
+  --amber: #f2c46f;
+  --red: #f27f9b;
+  --purple: #c48cff;
+  --aurora-pink: #d77bef;
+  --aurora-violet: #6e59d9;
+}
+
+html, body { background: #0b0a12; }
+body {
+  background: radial-gradient(circle at 8% 0%, rgba(164,43,212,.14), transparent 29%), radial-gradient(circle at 92% 8%, rgba(88,58,192,.13), transparent 26%), #0b0a12;
+}
+.app-shell {
+  background: radial-gradient(circle at 76% -15%, rgba(164,43,212,.18), transparent 31%), radial-gradient(circle at 32% 110%, rgba(88,58,192,.10), transparent 34%), #0b0a12;
+}
+.sidebar {
+  background: linear-gradient(180deg, rgba(17,12,25,.98), rgba(11,10,18,.98));
+  border-right-color: rgba(215,123,239,.20);
+  box-shadow: 12px 0 45px rgba(0,0,0,.16);
+}
+.brand strong span, .section-kicker, .nav-label, .module-kicker, .panel-eyebrow { color: #d77bef; }
+.brand-mark, .primary-btn, .login-submit, .settings-save, .account-save {
+  background: linear-gradient(105deg, #a42bd4, #583ac0) !important;
+  box-shadow: 0 8px 24px rgba(119,48,190,.28);
+}
+.brand-mark { box-shadow: 0 0 25px rgba(215,123,239,.24); }
+.workspace, .sidebar-context {
+  background: linear-gradient(135deg, rgba(43,22,57,.92), rgba(22,17,32,.94));
+  border-color: rgba(215,123,239,.22);
+}
+.nav-search, .global-search { background: rgba(14,11,22,.84); border-color: rgba(215,123,239,.18); }
+nav button:hover, .organized-nav-item:hover, .icon-btn:hover, .top-icon:hover { background: rgba(164,43,212,.14); color: #f0d9f5; }
+nav button.active, .organized-nav-item.active {
+  background: linear-gradient(90deg, rgba(164,43,212,.24), rgba(88,58,192,.12));
+  border-left-color: #d77bef; color: #f1c9fa;
+}
+.topbar { background: rgba(11,10,18,.78); border-bottom-color: rgba(215,123,239,.17); }
+.kpi-card, .panel, .module-card, .standalone-panel, .standalone-metric, .settings-card, .audit-toolbar, .audit-table, .data-mode-switcher {
+  border-color: rgba(215,123,239,.18);
+  background: linear-gradient(145deg, rgba(31,21,43,.95), rgba(17,13,26,.97));
+  box-shadow: 0 16px 40px rgba(0,0,0,.14);
+}
+.kpi-card:hover, .panel:hover, .module-card:hover, .settings-card:hover {
+  border-color: rgba(215,123,239,.42);
+  box-shadow: 0 20px 48px rgba(0,0,0,.22), 0 0 28px rgba(164,43,212,.08);
+}
+button, select, input, textarea { accent-color: #d77bef; }
+input:focus, select:focus, textarea:focus, .login-input:focus-within, .global-search:focus-within, .nav-search:focus-within {
+  border-color: #d77bef !important; box-shadow: 0 0 0 3px rgba(215,123,239,.13);
+}
+select, .settings-card select, .settings-card input:not([type="range"]), .standalone-data-console select, .standalone-data-console input {
+  background-color: #17121f; border-color: rgba(215,123,239,.23); color: #f0e8f3;
+}
+.action-chip, .text-btn, .module-card-arrow, .link-button { color: #e1a6f1; }
+.action-chip:hover, .text-btn:hover, .link-button:hover { color: #fff; border-color: rgba(215,123,239,.52); }
+.standalone-top, .module-page-hero, .section-heading, .audit-table-head { border-color: rgba(215,123,239,.15); }
+.standalone-hero h1, .module-page-hero h1, .account-heading h1, .login-card-head h2 { color: #fff; text-shadow: 0 0 28px rgba(215,123,239,.08); }
+.standalone-hero p, .module-page-hero p, .account-heading p, .panel-heading p, .module-card-copy small { color: #b4a5bd; }
+.map-body, .smart-leaflet-map, .complaints-map, .intelligence-map-canvas {
+  border-color: rgba(215,123,239,.22) !important;
+  box-shadow: inset 0 0 0 1px rgba(215,123,239,.06), 0 18px 45px rgba(0,0,0,.18);
+}
+.module-access-denied, .module-state, .module-error, .auth-loading {
+  background: radial-gradient(circle at 50% 0%, rgba(164,43,212,.12), transparent 42%), #0b0a12; color: #eee5f1;
+}
+.module-access-denied svg, .module-state svg, .module-error svg { color: #d77bef; }
+.login-refined.login-video-page .login-card, .login-refined.login-video-page .login-card-wrap { border-color: rgba(215,123,239,.25); }
+@media (max-width: 760px) { .app-shell { background: radial-gradient(circle at 70% 0%, rgba(164,43,212,.15), transparent 42%), #0b0a12; } }

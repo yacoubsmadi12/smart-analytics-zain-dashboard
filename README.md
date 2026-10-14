@@ -7,7 +7,7 @@ SmartAnalytics is an executive **Network + Commercial Intelligence** workspace f
 ## Product areas
 
 - **Executive Overview** — KPI strip, decision queue, system pulse, network impact, SWOT and executive insight cards.
-- **Network Intelligence** — RF performance across 2G/3G/4G/5G, KPI trends, regional correlation and bottleneck thresholds.
+- **Network Intelligence** — RF performance across 2G/3G/4G/5G, KPI trends, regional correlation and bottleneck thresholds. Legacy Network Overview links resolve into the same operational network workspace.
 - **Coverage & Opportunity Map** — Jordan network map with sites, 4G/5G, fiber, complaints, churn, customer and revenue-risk layers.
 - **Problem Areas Map** — map view for operational flags and priority hotspots.
 - **Customer Intelligence** — customer experience, customer records and merged complaint intelligence.
@@ -22,7 +22,7 @@ SmartAnalytics is an executive **Network + Commercial Intelligence** workspace f
 - Drizzle ORM
 - Recharts
 - Wouter routing
-- Google Maps / visual map fallback
+- Leaflet + OpenStreetMap with shared clustering and operational popups
 - Vitest server tests
 
 ## Local development

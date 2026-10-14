@@ -15,7 +15,7 @@ import {
   Wifi,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
-import { formatJod, formatPercent } from "@/lib/formatters";
+import { formatCount, formatJod, formatPercent } from "@/lib/formatters";
 
 type Campaign = {
   id: string;
@@ -114,8 +114,7 @@ export default function MarketingPage() {
       item.status.toLowerCase() === "active" ||
       item.status.toLowerCase() === "running"
   ).length;
-  const percent = (value: number | null) =>
-    value === null ? "—" : `${value.toFixed(1)}%`;
+  const percent = (value: number | null) => formatPercent(value);
   return (
     <main className="standalone-module marketing-page">
       <header className="module-page-hero marketing-hero">
@@ -253,16 +252,16 @@ export default function MarketingPage() {
                 </span>
                 <span className="marketing-budget">
                   <b>{money(item.budget)}</b>
-                  <small>{item.conversionRate}% conversion</small>
+                    <small>{formatPercent(item.conversionRate)} conversion</small>
                 </span>
                 <span className="marketing-potential">
                   <i>
                     <em style={{ width: `${item.marketPotential ?? 0}%` }} />
                   </i>
-                  <small>
-                    Market {percent(item.marketPotential)} · 5G{" "}
-                    {percent(item.fiveGPotential)}
-                  </small>
+                    <small>
+                      Potential subscribers {formatCount(item.marketPotential)} · 5G{" "}
+                      {formatCount(item.fiveGPotential)}
+                    </small>
                 </span>
                 <span
                   className={`marketing-status ${item.customerExperienceRisk ? "risk" : "good"}`}
@@ -300,7 +299,7 @@ export default function MarketingPage() {
                 <span>
                   <b>{segmentLabel(item.segment)}</b>
                   <small>
-                    {item.campaigns} campaigns · {item.averageConversion}%
+                    {item.campaigns} campaigns · {formatPercent(item.averageConversion)}
                     conversion
                   </small>
                 </span>
@@ -326,7 +325,7 @@ export default function MarketingPage() {
             <div className="marketing-detail-budget">
               <small>CAMPAIGN BUDGET</small>
               <b>{money(selected.budget)}</b>
-              <span>{selected.conversionRate}% conversion rate</span>
+              <span>{formatPercent(selected.conversionRate)} conversion rate</span>
             </div>
           </div>
           <div className="marketing-detail-grid">
@@ -337,13 +336,13 @@ export default function MarketingPage() {
             />
             <Detail
               label="Market potential"
-              value={percent(selected.marketPotential)}
+              value={formatCount(selected.marketPotential)}
               icon={Gauge}
               tone="accent"
             />
             <Detail
               label="5G potential"
-              value={percent(selected.fiveGPotential)}
+              value={formatCount(selected.fiveGPotential)}
               icon={Wifi}
               tone="accent"
             />

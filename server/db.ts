@@ -1854,3 +1854,19 @@ export async function listAuditLogs(limit = 100) {
     .orderBy(desc(auditLogs.createdAt))
     .limit(limit);
 }
+
+export async function recordAudit(input: {
+  userId: number;
+  action: string;
+  resource?: string;
+  metadata?: Record<string, unknown>;
+}) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(auditLogs).values({
+    userId: input.userId,
+    action: input.action,
+    resource: input.resource,
+    metadata: input.metadata ? JSON.stringify(input.metadata) : undefined,
+  });
+}

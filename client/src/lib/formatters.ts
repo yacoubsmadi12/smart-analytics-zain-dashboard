@@ -17,6 +17,28 @@ export function formatJod(value: number | null | undefined): string {
   return `${Math.round(amount).toLocaleString("en-US")} JOD`;
 }
 
+/** Format count-like metrics without presenting them as percentages. */
+export function formatCount(
+  value: number | null | undefined,
+  digits = 1
+): string {
+  if (value === null || value === undefined || !Number.isFinite(Number(value)))
+    return "—";
+  const amount = Number(value);
+  const sign = amount < 0 ? "-" : "";
+  const absolute = Math.abs(amount);
+  if (absolute >= 1_000_000)
+    return `${sign}${(absolute / 1_000_000).toFixed(digits).replace(/\.0+$/, "")}M`;
+  if (absolute >= 1_000)
+    return `${sign}${(absolute / 1_000).toFixed(digits).replace(/\.0+$/, "")}K`;
+  return amount.toLocaleString("en-US", { maximumFractionDigits: 0 });
+}
+
+/** Currency formatter kept separate from count and percentage presentation. */
+export function formatCurrency(value: number | null | undefined): string {
+  return formatJod(value);
+}
+
 export function formatCompact(
   value: number | null | undefined,
   digits = 1

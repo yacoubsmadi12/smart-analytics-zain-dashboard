@@ -1,173 +1,114 @@
-/**
- * GOOGLE MAPS FRONTEND INTEGRATION - ESSENTIAL GUIDE
- *
- * USAGE FROM PARENT COMPONENT:
- * ======
- *
- * const mapRef = useRef<google.maps.Map | null>(null);
- *
- * <MapView
- *   initialCenter={{ lat: 40.7128, lng: -74.0060 }}
- *   initialZoom={15}
- *   onMapReady={(map) => {
- *     mapRef.current = map; // Store to control map from parent anytime, google map itself is in charge of the re-rendering, not react state.
- * </MapView>
- *
- * ======
- * Available Libraries and Core Features:
- * -------------------------------
- * 📍 MARKER (from `marker` library)
- * - Attaches to map using { map, position }
- * new google.maps.marker.AdvancedMarkerElement({
- *   map,
- *   position: { lat: 37.7749, lng: -122.4194 },
- *   title: "San Francisco",
- * });
- *
- * -------------------------------
- * 🏢 PLACES (from `places` library)
- * - Does not attach directly to map; use data with your map manually.
- * const place = new google.maps.places.Place({ id: PLACE_ID });
- * await place.fetchFields({ fields: ["displayName", "location"] });
- * map.setCenter(place.location);
- * new google.maps.marker.AdvancedMarkerElement({ map, position: place.location });
- *
- * -------------------------------
- * 🧭 GEOCODER (from `geocoding` library)
- * - Standalone service; manually apply results to map.
- * const geocoder = new google.maps.Geocoder();
- * geocoder.geocode({ address: "New York" }, (results, status) => {
- *   if (status === "OK" && results[0]) {
- *     map.setCenter(results[0].geometry.location);
- *     new google.maps.marker.AdvancedMarkerElement({
- *       map,
- *       position: results[0].geometry.location,
- *     });
- *   }
- * });
- *
- * -------------------------------
- * 📐 GEOMETRY (from `geometry` library)
- * - Pure utility functions; not attached to map.
- * const dist = google.maps.geometry.spherical.computeDistanceBetween(p1, p2);
- *
- * -------------------------------
- * 🛣️ ROUTES (from `routes` library)
- * - Combines DirectionsService (standalone) + DirectionsRenderer (map-attached)
- * const directionsService = new google.maps.DirectionsService();
- * const directionsRenderer = new google.maps.DirectionsRenderer({ map });
- * directionsService.route(
- *   { origin, destination, travelMode: "DRIVING" },
- *   (res, status) => status === "OK" && directionsRenderer.setDirections(res)
- * );
- *
- * -------------------------------
- * 🌦️ MAP LAYERS (attach directly to map)
- * - new google.maps.TrafficLayer().setMap(map);
- * - new google.maps.TransitLayer().setMap(map);
- * - new google.maps.BicyclingLayer().setMap(map);
- *
- * -------------------------------
- * ✅ SUMMARY
- * - “map-attached” → AdvancedMarkerElement, DirectionsRenderer, Layers.
- * - “standalone” → Geocoder, DirectionsService, DistanceMatrixService, ElevationService.
- * - “data-only” → Place, Geometry utilities.
- */
-
-/// <reference types="@types/google.maps" />
-
-import { useEffect, useRef } from "react";
-import { usePersistFn } from "@/hooks/usePersistFn";
+import { useEffect, useRef, useState } from "react";
+import L from "leaflet";
 import { cn } from "@/lib/utils";
 
-declare global {
-  interface Window {
-    google?: typeof google;
-  }
-}
+export type MapMarker = {
+  id: string;
+  lat: number;
+  lng: number;
+  label?: string;
+  color?: string;
+  layer?: string;
+  detail?: { title: string; rows: Array<[string, string]> };
+};
 
-const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
-const FORGE_BASE_URL =
-  import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
-  "https://forge.butterfly-effect.dev";
-const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
+export type MapLayerState = Record<string, boolean>;
 
-let mapScriptPromise: Promise<void> | null = null;
-function loadMapScript() {
-  if (window.google?.maps) return Promise.resolve();
-  if (mapScriptPromise) return mapScriptPromise;
-  mapScriptPromise = new Promise<void>((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>("script[data-smart-analytics-maps]");
-    if (existing) {
-      existing.addEventListener("load", () => resolve(), { once: true });
-      existing.addEventListener("error", () => reject(new Error("Google Maps could not be loaded")), { once: true });
-      return;
-    }
-    const script = document.createElement("script");
-    script.dataset.smartAnalyticsMaps = "true";
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
-    script.async = true;
-    script.crossOrigin = "anonymous";
-    script.onload = () => {
-      resolve();
-      script.remove();
-    };
-    script.onerror = () => {
-      mapScriptPromise = null;
-      reject(new Error("Google Maps could not be loaded. Check the maps integration and try again."));
-    };
-    document.head.appendChild(script);
-  });
-  return mapScriptPromise;
-}
-
-interface MapViewProps {
+type MapViewProps = {
   className?: string;
-  initialCenter?: google.maps.LatLngLiteral;
+  initialCenter?: { lat: number; lng: number };
   initialZoom?: number;
-  onMapReady?: (map: google.maps.Map) => void;
+  markers?: MapMarker[];
+  layers?: MapLayerState;
+  selectedId?: string | null;
+  onMarkerClick?: (marker: MapMarker) => void;
+  onMapReady?: (map: any) => void;
   onMapError?: (error: Error) => void;
+};
+
+const JORDAN_CENTER = { lat: 31.24, lng: 36.35 };
+
+function clusterMarkers(markers: MapMarker[], zoom: number) {
+  if (zoom >= 11) return markers.map(marker => ({ marker, count: 1, lat: marker.lat, lng: marker.lng }));
+  const precision = zoom <= 7 ? 0.28 : zoom <= 9 ? 0.12 : 0.045;
+  const groups = new Map<string, { markers: MapMarker[]; lat: number; lng: number }>();
+  markers.forEach(marker => {
+    const key = `${Math.round(marker.lat / precision)}:${Math.round(marker.lng / precision)}`;
+    const group = groups.get(key) ?? { markers: [], lat: 0, lng: 0 };
+    group.markers.push(marker);
+    group.lat += marker.lat;
+    group.lng += marker.lng;
+    groups.set(key, group);
+  });
+  return Array.from(groups.values()).map(group => ({ marker: group.markers[0], count: group.markers.length, lat: group.lat / group.markers.length, lng: group.lng / group.markers.length }));
 }
 
 export function MapView({
   className,
-  initialCenter = { lat: 37.7749, lng: -122.4194 },
-  initialZoom = 12,
+  initialCenter = JORDAN_CENTER,
+  initialZoom = 7,
+  markers = [],
+  layers = {},
+  selectedId,
+  onMarkerClick,
   onMapReady,
   onMapError,
 }: MapViewProps) {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<google.maps.Map | null>(null);
-  const reportMapError = usePersistFn((error: Error) => onMapError?.(error));
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const markerLayerRef = useRef<L.LayerGroup | null>(null);
+  const onMarkerClickRef = useRef(onMarkerClick);
+  const onMapReadyRef = useRef(onMapReady);
+  const onMapErrorRef = useRef(onMapError);
+  const [zoom, setZoom] = useState(initialZoom);
 
-  const init = usePersistFn(async () => {
-    await loadMapScript();
-    if (!mapContainer.current) {
-      console.error("Map container not found");
-      return;
-    }
-    map.current = new window.google.maps.Map(mapContainer.current, {
-      zoom: initialZoom,
-      center: initialCenter,
-      mapTypeControl: true,
-      fullscreenControl: true,
-      zoomControl: true,
-      streetViewControl: true,
-      mapId: "DEMO_MAP_ID",
-    });
-    if (onMapReady) {
-      onMapReady(map.current);
-    }
-  });
+  onMarkerClickRef.current = onMarkerClick;
+  onMapReadyRef.current = onMapReady;
+  onMapErrorRef.current = onMapError;
 
   useEffect(() => {
-    void init().catch(error => {
-      console.error("Failed to initialize Google Maps", error);
-      reportMapError(error instanceof Error ? error : new Error("Google Maps could not be initialized"));
-    });
-  }, [init, reportMapError]);
+    if (!containerRef.current || mapRef.current) return;
+    try {
+      const map = L.map(containerRef.current, { zoomControl: true, preferCanvas: true }).setView([initialCenter.lat, initialCenter.lng], initialZoom);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap contributors", maxZoom: 19 }).addTo(map);
+      const markerLayer = L.layerGroup().addTo(map);
+      map.on("zoomend", () => setZoom(map.getZoom()));
+      mapRef.current = map;
+      markerLayerRef.current = markerLayer;
+      onMapReadyRef.current?.(map);
+      setTimeout(() => map.invalidateSize(), 0);
+    } catch (error) {
+      onMapErrorRef.current?.(error instanceof Error ? error : new Error("Map could not be initialized"));
+    }
+    return () => { mapRef.current?.remove(); mapRef.current = null; markerLayerRef.current = null; };
+  }, [initialCenter.lat, initialCenter.lng, initialZoom]);
 
-  return (
-    <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
-  );
+  useEffect(() => {
+    const map = mapRef.current;
+    const layer = markerLayerRef.current;
+    if (!map || !layer) return;
+    layer.clearLayers();
+    const visible = markers.filter(marker => !marker.layer || layers[marker.layer] !== false);
+    clusterMarkers(visible, zoom).forEach(group => {
+      const color = group.marker.color ?? "#39c7d5";
+      const isSelected = group.count === 1 && group.marker.id === selectedId;
+      const circle = L.circleMarker([group.lat, group.lng], { radius: group.count > 1 ? Math.min(20, 8 + Math.log10(group.count) * 5) : isSelected ? 10 : 6, color: isSelected ? "#ffffff" : "#071822", weight: isSelected ? 3 : 1.5, fillColor: group.count > 1 ? "#2eb6c8" : color, fillOpacity: 0.88 });
+      if (group.count > 1) {
+        circle.bindTooltip(`${group.count.toLocaleString()} sites`, { direction: "top", className: "map-cluster-tooltip" });
+        circle.on("click", () => map.setView([group.lat, group.lng], Math.min(12, zoom + 2)));
+      } else {
+        const marker = group.marker;
+        if (marker.label) circle.bindTooltip(marker.label, { direction: "top", offset: [0, -5] });
+        if (marker.detail) circle.bindPopup(`<strong>${marker.detail.title}</strong>${marker.detail.rows.map((row: [string, string]) => `<br/><span>${row[0]}: ${row[1]}</span>`).join("")}`);
+        circle.on("click", () => onMarkerClickRef.current?.(marker));
+      }
+      circle.addTo(layer);
+    });
+  }, [markers, layers, selectedId, zoom]);
+
+  return <div ref={containerRef} className={cn("w-full h-[500px] smart-leaflet-map", className)} aria-label="Jordan operational map" />;
+}
+
+export function OperationalMap(props: MapViewProps) {
+  return <MapView {...props} />;
 }
