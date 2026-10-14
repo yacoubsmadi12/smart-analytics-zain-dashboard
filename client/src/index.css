@@ -3985,3 +3985,212 @@ select, .settings-card select, .settings-card input:not([type="range"]), .standa
 .module-access-denied svg, .module-state svg, .module-error svg { color: #d77bef; }
 .login-refined.login-video-page .login-card, .login-refined.login-video-page .login-card-wrap { border-color: rgba(215,123,239,.25); }
 @media (max-width: 760px) { .app-shell { background: radial-gradient(circle at 70% 0%, rgba(164,43,212,.15), transparent 42%), #0b0a12; } }
+
+
+/* ================================================================
+   Page polish: consistent type scale, rhythm and navigation affordance
+   ================================================================ */
+:root { font-family: Inter, Manrope, sans-serif; }
+body, button, input, select, textarea { font-family: Inter, Manrope, sans-serif; }
+
+.standalone-module,
+.account-page,
+.module-access-denied {
+  position: relative;
+  isolation: isolate;
+}
+
+.standalone-module {
+  padding: 30px clamp(18px, 4vw, 64px) 72px;
+  background:
+    radial-gradient(circle at 84% 0%, rgba(164,43,212,.15), transparent 28%),
+    radial-gradient(circle at 8% 48%, rgba(88,58,192,.08), transparent 26%),
+    #0b0a12;
+}
+
+.standalone-module > * {
+  width: min(100%, 1480px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.standalone-top {
+  min-height: 46px;
+  padding: 0 0 16px;
+  margin-bottom: 26px;
+}
+
+.standalone-top > button,
+.account-top > button,
+.module-access-denied button,
+.route-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(215,123,239,.24);
+  border-radius: 10px;
+  padding: 9px 13px;
+  background: rgba(39,20,54,.72);
+  color: #e5a7f2;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.standalone-top > button:hover,
+.account-top > button:hover,
+.module-access-denied button:hover,
+.route-back-button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(215,123,239,.58);
+  background: rgba(92,42,122,.5);
+  box-shadow: 0 10px 26px rgba(119,48,190,.22);
+}
+
+.module-page-hero,
+.standalone-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(215,123,239,.16);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 93% 12%, rgba(164,43,212,.20), transparent 27%),
+    linear-gradient(135deg, rgba(34,22,48,.96), rgba(16,12,25,.98));
+  box-shadow: 0 22px 58px rgba(0,0,0,.18);
+}
+
+.module-page-hero {
+  min-height: 178px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 34px clamp(22px, 4vw, 48px);
+  margin-bottom: 22px;
+}
+
+.module-page-hero::after,
+.standalone-hero::after {
+  content: "";
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  right: -95px;
+  top: -120px;
+  border: 1px solid rgba(215,123,239,.18);
+  border-radius: 50%;
+  box-shadow: 0 0 0 22px rgba(215,123,239,.04), 0 0 0 46px rgba(215,123,239,.025);
+  pointer-events: none;
+}
+
+.module-page-hero h1,
+.standalone-hero h1 {
+  position: relative;
+  z-index: 1;
+  margin: 10px 0 9px;
+  font-size: clamp(28px, 3.2vw, 46px);
+  line-height: 1.06;
+  letter-spacing: -1.8px;
+}
+
+.module-page-hero p,
+.standalone-hero p {
+  max-width: 720px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #b4a5bd;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.module-kicker,
+.section-kicker,
+.panel-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+.module-hero-icon,
+.infrastructure-hero-icon,
+.revenue-hero-icon,
+.priorities-hero-icon,
+.standalone-icon {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  border: 1px solid rgba(215,123,239,.35);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(164,43,212,.26), rgba(88,58,192,.18));
+  color: #f0b7fb;
+  box-shadow: 0 0 32px rgba(164,43,212,.16);
+}
+
+.standalone-panel,
+.standalone-metric,
+.infrastructure-filter,
+.infrastructure-opportunity-panel,
+.infrastructure-regions-panel,
+.infrastructure-detail,
+.ai-command-bar,
+.ai-chat-panel,
+.ai-context-panel,
+.alerts-toolbar,
+.audit-toolbar,
+.audit-table {
+  border-radius: 18px;
+}
+
+.standalone-metric {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 82px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+}
+
+.standalone-metric strong { color: #fff; font: 700 clamp(22px, 3vw, 34px) "DM Mono"; }
+.standalone-metric span { color: #b4a5bd; font-size: 11px; }
+.standalone-metric svg { margin-left: auto; color: #d77bef; }
+
+.route-back-button {
+  position: fixed;
+  z-index: 50;
+  right: clamp(16px, 3vw, 38px);
+  bottom: 24px;
+  background: linear-gradient(105deg, rgba(63,25,82,.96), rgba(39,28,86,.96));
+  box-shadow: 0 14px 32px rgba(0,0,0,.32), 0 0 26px rgba(164,43,212,.12);
+}
+
+.module-access-denied {
+  padding: 40px 20px;
+}
+.module-access-denied h1 { font-size: clamp(24px, 4vw, 38px); letter-spacing: -1px; }
+.module-access-denied p { max-width: 430px; margin: 0; color: #b4a5bd; line-height: 1.7; }
+
+/* Better reading rhythm for dense operational pages. */
+.alert-card, .priority-card, .decision-card, .infrastructure-opportunity-row, .audit-table article {
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.alert-card:hover, .priority-card:hover, .decision-card:hover, .infrastructure-opportunity-row:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 760px) {
+  .standalone-module { padding: 20px 14px 78px; }
+  .module-page-hero, .standalone-hero { align-items: flex-start; padding: 25px 20px; border-radius: 18px; }
+  .module-page-hero { min-height: 0; }
+  .module-page-hero h1, .standalone-hero h1 { font-size: 29px; letter-spacing: -1.1px; }
+  .module-page-hero p, .standalone-hero p { font-size: 11px; }
+  .module-hero-icon, .infrastructure-hero-icon, .revenue-hero-icon, .priorities-hero-icon, .standalone-icon { width: 52px; height: 52px; border-radius: 15px; }
+  .standalone-top { gap: 9px; margin-bottom: 18px; }
+  .standalone-top .module-role { display: none; }
+  .route-back-button { right: 14px; bottom: 16px; }
+}

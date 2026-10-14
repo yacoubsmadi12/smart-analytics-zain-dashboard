@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useRoute } from "wouter";
+import { Route, Switch, useLocation, useRoute } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
@@ -28,12 +28,19 @@ import { useAuth } from "@/_core/hooks/useAuth";
 
 function ModuleRoute() { const [, params] = useRoute("/:module"); const slug = params?.module || "network"; if (slug === "rf-performance") return <RFPerformancePage />; if (slug === "intelligence-map" || slug === "problem-areas") return <IntelligenceMapPage />; if (slug === "network") return <NetworkPage />; if (slug === "customer-experience") return <CustomerExperiencePage />; if (slug === "customers") return <CustomersPage />; if (slug === "complaints") return <ComplaintsPage />; if (slug === "infrastructure-fiber") return <InfrastructureFiberPage />; if (slug === "sales") return <SalesPage />; if (slug === "marketing") return <MarketingPage />; if (slug === "business-revenue") return <BusinessRevenuePage />; if (slug === "priorities") return <PrioritiesPage />; if (slug === "ai-assistant") return <AIAssistantPage />; if (slug === "alerts") return <AlertsPage />; if (slug === "reports") return <ReportsPage />; if (slug === "system-settings") return <SystemSettingsPage />; if (slug === "audit-logs") return <AuditLogsPage />; if (slug === "data-management" || slug === "user-management") return <ModulePage slug={slug} />; return <NotFound />; }
 
+function UtilityBackButton({ enabled }: { enabled: boolean }) {
+  const [location, navigate] = useLocation();
+  const routesWithOwnBack = ["/network", "/rf-performance", "/intelligence-map", "/problem-areas", "/customer-experience", "/customers", "/complaints", "/data-management", "/user-management"];
+  if (!enabled || location === "/" || location === "/login" || location.startsWith("/account/") || routesWithOwnBack.includes(location)) return null;
+  return <button className="route-back-button" type="button" onClick={() => navigate("/")} aria-label="Return to command center"><span aria-hidden="true">←</span> Command Center</button>;
+}
+
 function Router() {
   const [isLoginRoute] = useRoute("/login");
   const { user, loading } = useAuth();
   if (isLoginRoute) return <Login/>;
   if (loading) return <div className="auth-loading"><div className="brand-mark"><span/><span/><span/></div><span>Loading secure workspace…</span></div>;
-  return <Switch><Route path="/login" component={Login}/>{user ? <><Route path="/" component={Home}/><Route path="/account/profile" component={() => <AccountPage mode="profile" />}/><Route path="/account/settings" component={() => <AccountPage mode="settings" />}/><Route path="/:module" component={ModuleRoute}/></> : <><Route path="/" component={Login}/><Route path="/:module" component={Login}/></>}<Route path="/404" component={NotFound}/><Route component={NotFound}/></Switch>;
+  return <><UtilityBackButton enabled={Boolean(user)} /><Switch><Route path="/login" component={Login}/>{user ? <><Route path="/" component={Home}/><Route path="/account/profile" component={() => <AccountPage mode="profile" />}/><Route path="/account/settings" component={() => <AccountPage mode="settings" />}/><Route path="/:module" component={ModuleRoute}/></> : <><Route path="/" component={Login}/><Route path="/:module" component={Login}/></>}<Route path="/404" component={NotFound}/><Route component={NotFound}/></Switch></>;
 }
 
 export default function App() {
